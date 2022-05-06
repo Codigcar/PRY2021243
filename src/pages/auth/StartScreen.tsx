@@ -14,7 +14,7 @@ export const StartScreen = ({ navigation }: any) => {
       <View style={{flex:1,alignItems:"center", justifyContent:'center'}}>
         <Image source={require('../../assets/images/car.png')} style={{width:100, height:100, borderRadius:50 }}/>
         <Image source={require('../../assets/images/texto.png')} style={{width:300, height:100, resizeMode:"contain"}}/>
-      <Paragraph>
+      <Paragraph >
         Reporta accidentes en tiempo real
         Ayuda a la Policía Nacional Perú a atender
         accidentes de tránsito de forma eficiente
