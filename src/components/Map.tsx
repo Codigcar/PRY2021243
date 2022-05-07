@@ -7,7 +7,7 @@ import {Fab} from './Fab';
 import {View, Image} from 'react-native';
 import {Button} from 'react-native-elements';
 import ModalConnectNFC from '../pages/user/ModalConnectNFC';
-import { Styles } from '../assets/css/Styles';
+import {Styles} from '../assets/css/Styles';
 
 interface Props {
   markers?: Marker[];
@@ -19,12 +19,7 @@ export const Map = ({markers}: Props) => {
 
   const mapViewRef = useRef<MapView>();
 
-  const centerPosition = async () => {
-    const {latitude, longitude} = await getCurrentLocation();
-    mapViewRef.current?.animateCamera({
-      center: {latitude, longitude},
-    });
-  };
+  console.log('[MarkersPolice]: ', markers);
   console.log('[Markersv1]: ', initialPosition.latitude);
   console.log('[Markersv2]: ', initialPosition.longitude);
 
@@ -50,25 +45,28 @@ export const Map = ({markers}: Props) => {
         }}>
         {markers &&
           markers.length > 0 &&
-          markers.map((marker: any, key: any) => (
-            <Marker
-              image={require("../assets/images/flag.png")}
-              key={key}
-              coordinate={{
-                latitude: Number(marker.latitude),
-                longitude: Number(marker.longitude),
-              }}
-              // title={`Estado:${marker.status ? 0 : 'No atendido'} ${marker.status ? 1 : 'En proceso'} ${marker.status ? 2 : 'Finalizado'}`}
-              title={`Estado: ${
-                marker.status == 0
-                  ? 'No atendido'
-                  : marker.status == 1
-                  ? 'En proceso'
-                  : 'Finalizado'
-              }`}
-              description={`Placa: ${marker.plate}`}
-            />
-          ))}
+          markers.map(
+            (marker: any, key: any) =>
+              (marker.status == 0 ||
+              marker.status == 1) && (
+                <Marker
+                  image={require('../assets/images/flag.png')}
+                  key={key}
+                  coordinate={{
+                    latitude: Number(marker.latitude),
+                    longitude: Number(marker.longitude),
+                  }}
+                  title={`Estado: ${
+                    marker.status == 0
+                      ? 'No atendido'
+                      : marker.status == 1
+                      ? 'En proceso'
+                      : 'Finalizado'
+                  }`}
+                  description={`Placa: ${marker.plate}`}
+                />
+              ),
+          )}
       </MapView>
       <Button
         title="¡Mandar Alerta!"
