@@ -69,13 +69,16 @@ const ModalConnectNFC = ({
       // let address = '';
 
       // if (tag) {
-      //   cancelNfcScan();
-        showToast();
 
-      //   var currentLocation = {
-      //     lat: latitude,
-      //     lng: longitude,
-      //   };
+        setTimeout(() => {
+          cancelNfcScan();
+          showToast();
+        }, 5000);
+
+        // var currentLocation = {
+        //   lat: latitude,
+        //   lng: longitude,
+        // };
 
       //   const respGeo = await Geocoder.geocodePosition(currentLocation);
       //   try {
@@ -86,8 +89,8 @@ const ModalConnectNFC = ({
       //   }
 
         const body: IAccident = {
-          // latitude: latitude.toString(),
-          // longitude: longitude.toString(),
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
           // dateCreated: new Date().toISOString(),
           // plate: Placa,
           // owner: Nombre,
@@ -96,8 +99,8 @@ const ModalConnectNFC = ({
           // address: distric + ', ' + address,
           // soat: 'SOAT',
 
-          latitude: '-12.156843815273826',
-          longitude:  '-76.99931723000626',
+          // latitude: '-12.156843815273826',
+          // longitude:  '-76.99931723000626',
           dateCreated: '12-12-1990',
           plate: 'ASU-381',
           owner: 'Fernanda',
@@ -107,8 +110,12 @@ const ModalConnectNFC = ({
           soat: '1236548651',
         };
 
-        socketRef.current = io(DEV.ENV.APP_API_SOCKET);
-        socketRef.current.emit('accidents', body);
+        setTimeout(() => {
+          socketRef.current = io(DEV.ENV.APP_API_SOCKET);
+          socketRef.current.emit('accidents', body);
+        }, 5000);
+
+    
 
       // }
     } catch (ex) {

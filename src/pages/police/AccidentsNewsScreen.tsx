@@ -22,8 +22,8 @@ import {Picker} from '@react-native-picker/picker';
 import SearchAccidents from '../../components/SearchAccidents';
 
 import * as DEV from '../../utils/fetchCustom';
-import { useFocusEffect } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 interface Props extends StackScreenProps<any, any> {}
@@ -89,7 +89,7 @@ export const AccidentsNewsScreen = ({navigation}: Props) => {
       });
       isActive.current = true;
       return () => {
-        console.log('Des-montado');
+        console.log('Des-montado [AccidentNewScreen]');
         isMounted.current = false;
       };
     }, []),

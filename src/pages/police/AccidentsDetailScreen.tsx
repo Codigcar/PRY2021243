@@ -121,11 +121,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
       const resp = await datares.json();
       setValue('description', "");
       setValue('conclusion', "");
-      // reset();
-      console.log({resp});
       setLoading(false);
-      // navigation.goBack();
-      // navigation.navigate('AccidentsFinishedScreen');
       navigation.popToTop();
     } catch (error) {
       console.error({error});

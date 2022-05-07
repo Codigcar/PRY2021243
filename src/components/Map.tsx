@@ -1,10 +1,8 @@
 import Geolocation from '@react-native-community/geolocation';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import {useLocation} from '../hooks/useLocation';
 import {LoadingScreen} from '../pages/LoadingScreen';
-import {Fab} from './Fab';
-import {View, Image} from 'react-native';
 import {Button} from 'react-native-elements';
 import ModalConnectNFC from '../pages/user/ModalConnectNFC';
 import {Styles} from '../assets/css/Styles';
@@ -18,10 +16,6 @@ export const Map = ({markers}: Props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
 
   const mapViewRef = useRef<MapView>();
-
-  console.log('[MarkersPolice]: ', markers);
-  console.log('[Markersv1]: ', initialPosition.latitude);
-  console.log('[Markersv2]: ', initialPosition.longitude);
 
   const modalScanNFC = () => {
     setModalVisible(true);
@@ -47,8 +41,9 @@ export const Map = ({markers}: Props) => {
           markers.length > 0 &&
           markers.map(
             (marker: any, key: any) =>
-              (marker.status == 0 ||
-              marker.status == 1) && (
+              // (marker.status == 0 ||
+              // marker.status == 1) && 
+              (
                 <Marker
                   image={require('../assets/images/flag.png')}
                   key={key}
@@ -61,8 +56,13 @@ export const Map = ({markers}: Props) => {
                       ? 'No atendido'
                       : marker.status == 1
                       ? 'En proceso'
-                      : 'Finalizado'
+                      : marker.status == 2
+                      && 'Atendido'
+                      // : 'Finalizado'
                   }`}
+                  // title={`Estado: ${
+                  //   marker.status 
+                  // }`}
                   description={`Placa: ${marker.plate}`}
                 />
               ),

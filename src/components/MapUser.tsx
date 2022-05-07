@@ -50,7 +50,8 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
           markers.length > 0 &&
           markers.map(
             (marker: any, key: any) =>
-              (marker.status==0 || marker.status==1) && (
+              // (marker.status==0 || marker.status==1) && 
+              (
                 <Marker
                   image={require("../assets/images/flag.png")}
                   key={key}

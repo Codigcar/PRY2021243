@@ -19,6 +19,7 @@ const MapUserScreen = () => {
       });
   
       socketRef.current.on('accidents-taken', (data: any) => {
+      console.error('accidents-taken: ', data);
         setMarkers((array: any) =>
           array.filter((item: any) => item.id !== data.id),
         );
