@@ -60,9 +60,6 @@ export const Map = ({markers}: Props) => {
                       && 'Atendido'
                       // : 'Finalizado'
                   }`}
-                  // title={`Estado: ${
-                  //   marker.status 
-                  // }`}
                   description={`Placa: ${marker.plate}`}
                 />
               ),

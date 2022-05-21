@@ -59,8 +59,16 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
                     latitude: Number(marker.latitude),
                     longitude: Number(marker.longitude),
                   }}
-                  title="Esto es un título"
-                  description="Esto es una descripción del marcador"
+                  title={`Estado: ${
+                    marker.status == 0
+                      ? 'No atendido'
+                      : marker.status == 1
+                      ? 'En proceso'
+                      : marker.status == 2
+                      && 'Atendido'
+                      // : 'Finalizado'
+                  }`}
+                  description={`Placa: ${marker.plate}`}
                 />
               ),
           )}
