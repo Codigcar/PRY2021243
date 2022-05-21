@@ -52,7 +52,7 @@ export const RegisterPoliceScreen = ({ navigation }: any) => {
       "email": email.value,
       "password": password.value,
       "license": license.value,
-      "userType": "POLICIA"
+      "userType": "POLICE"
     }
 
     try {

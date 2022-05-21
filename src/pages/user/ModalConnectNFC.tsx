@@ -52,70 +52,68 @@ const ModalConnectNFC = ({
 
   async function readNdef() {
     try {
-      // await NfcManager.requestTechnology([NfcTech.Ndef]);
-      // const tag = await NfcManager.getTag();
+      await NfcManager.requestTechnology([NfcTech.Ndef]);
+      const tag = await NfcManager.getTag();
 
-      // const tagNombre: any = tag?.ndefMessage[0]?.payload;
-      // const tagPlaca: any = tag?.ndefMessage[1]?.payload;
-      // const tagCelular: any = tag?.ndefMessage[2]?.payload;
-      // const tagSOAT : any = tag?.ndefMessage[3]?.payload;
+      const tagNombre: any = tag?.ndefMessage[0]?.payload;
+      const tagPlaca: any = tag?.ndefMessage[1]?.payload;
+      const tagCelular: any = tag?.ndefMessage[2]?.payload;
+      const tagSOAT : any = tag?.ndefMessage[3]?.payload;
 
-      // let Nombre = Ndef.text.decodePayload(tagNombre);
-      // let Placa = Ndef.text.decodePayload(tagPlaca);
-      // let Celular = Ndef.text.decodePayload(tagCelular);
-      // let SOAT = Ndef.text.decodePayload(tagSOAT);
+      let Nombre = Ndef.text.decodePayload(tagNombre);
+      let Placa = Ndef.text.decodePayload(tagPlaca);
+      let Celular = Ndef.text.decodePayload(tagCelular);
+      let SOAT = Ndef.text.decodePayload(tagSOAT);
 
-      // let distric = '';
-      // let address = '';
+      let distric = '';
+      let address = '';
+      let streetNumber = '';
+      let postalCode = '';
 
-      // if (tag) {
+      if (tag) {
+        cancelNfcScan();
+        showToast();
 
-        setTimeout(() => {
-          cancelNfcScan();
-          showToast();
-        }, 5000);
+        var currentLocation = {
+          lat: latitude,
+          lng: longitude,
+        };
 
-        // var currentLocation = {
-        //   lat: latitude,
-        //   lng: longitude,
-        // };
-
-      //   const respGeo = await Geocoder.geocodePosition(currentLocation);
-      //   try {
-      //     distric = await respGeo[1].locality;
-      //     address = await respGeo[2].formattedAddress;
-      //   } catch (error) {
-      //     console.error(error);
-      //   }
+        const respGeo = await Geocoder.geocodePosition(currentLocation);
+        try {
+          distric = await respGeo[1].locality;
+          address = await respGeo[2].formattedAddress;
+          streetNumber = await respGeo[0].streetNumber;
+          postalCode = await respGeo[0].postalCode;
+        } catch (error) {
+          console.error(error);
+        }
 
         const body: IAccident = {
           latitude: latitude.toString(),
           longitude: longitude.toString(),
-          // dateCreated: new Date().toISOString(),
-          // plate: Placa,
-          // owner: Nombre,
-          // phone: Celular,
-          // user: authState.userId,
-          // address: distric + ', ' + address,
-          // soat: 'SOAT',
+          dateCreated: new Date().toISOString(),
+          plate: Placa,
+          owner: Nombre,
+          phone: Celular,
+          user: authState.userId,
+          address: distric + ', ' + address + ', '+ streetNumber + ', ' + postalCode,
+          soat: SOAT,
 
           // latitude: '-12.156843815273826',
           // longitude:  '-76.99931723000626',
-          dateCreated: '12-12-1990',
-          plate: 'ASU-381',
-          owner: 'Fernanda',
-          phone: '946600912',
-          user: authState.userId,
-          address: 'Av. Matellini' + ', ' + 'Chorrillos',
-          soat: '1236548651',
+          // dateCreated: '12-12-2000',
+          // plate: 'Placa',
+          // owner: 'Nombre',
+          // phone: 'Celular',
+          // user: authState.userId,
+          // address: 'Av. peru' + ', ' + 'address',
+          // soat: 'SOAT',
         };
 
-        setTimeout(() => {
-          socketRef.current = io(DEV.ENV.APP_API_SOCKET);
-          socketRef.current.emit('accidents', body);
-        }, 5000);
-
-    
+        socketRef.current = io(DEV.ENV.APP_API_SOCKET);
+        socketRef.current.emit('accidents', body);
+      }
 
       // }
     } catch (ex) {

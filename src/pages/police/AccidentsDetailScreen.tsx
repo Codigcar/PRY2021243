@@ -94,9 +94,11 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     console.log('[onSubmit]: ', data);
+    console.log({authState});
     
     let body: any = {};
     if (data.conclusion || data.conclusion?.trim().length > 0 ) {
+      
       body = {
         status: 2,
         description: data.description,
@@ -111,7 +113,8 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
         userPolice: authState.userId,
       };
     }
-
+    console.log('[Body enviado al editar]: ', body);
+    
     try {
       const datares = await fetchWithToken(
         `api/accidents/${accidentDetail.id}`,

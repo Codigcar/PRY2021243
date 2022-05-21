@@ -94,7 +94,6 @@ export const MapScreen = () => {
   return (
     <View style={{flex: 1}}>
       <Map markers={markers} />
-      <Text>holaa</Text>
     </View>
   );
 };

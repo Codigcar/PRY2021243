@@ -27,6 +27,8 @@ import Button from '../components/Button';
 import { EditProfilePoliceScreen } from '../pages/police/EditPoliceProfile';
 import { EditGeneralProfileScreen } from '../pages/user/EditGeneralProfile';
 import { DetailsScreen } from '../pages/DetailsScreen';
+import { AuthContext } from '../context/AuthContext';
+
 
 const StackAuth = createStackNavigator();
 const Stack = createStackNavigator();
@@ -35,7 +37,7 @@ const Tab = createMaterialBottomTabNavigator();
 const UserTab = createMaterialBottomTabNavigator();
 
 export const Navigator = () => {
-  const {permissions} = useContext(PermissionsContext);
+  const {permissions } = useContext(PermissionsContext);
 
   if (permissions.locationStatus === 'unavailable') {
     return <LoadingScreen />;
@@ -225,9 +227,14 @@ export const PoliceStackNavigatorAccNews = ({navigation, route}: any) => {
 
 export const PoliceStackNavigatorAccFinished = ({ navigation, route }: any) => {
   const [visible, setVisible] = useState(false);
+  const { logout } = useContext(AuthContext);
 
   const hideMenu = () => setVisible(false);
-  const closeSession = () => navigation.navigate('Start');
+  const closeSession = () => {
+  
+    logout();
+    navigation.navigate('Start');
+  }
   const EditProfilePolice = () => navigation.navigate('EditProfilePolice');
   const showMenu = () => setVisible(true);
 
