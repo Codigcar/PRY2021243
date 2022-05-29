@@ -65,7 +65,7 @@ const AccidentsDetailUserScreen = ({route: {params}}: any) => {
               rounded
               size={55}
               source={{
-                uri: 'https://cdn2.salud180.com/sites/default/files/styles/medium/public/field/image/2020/11/mujer-22-anos-se-opera-para-no-tener-hijos.jpg',
+                uri: 'https://fcmabogados.com.ar/wp-content/uploads/2020/06/iconos-servicios-abogados-fcm-12.png',
               }}
             />
           </View>
