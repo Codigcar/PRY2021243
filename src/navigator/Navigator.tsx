@@ -178,15 +178,25 @@ export const PoliceStackNavigatorAccNews = ({navigation, route, params}: any) =>
   }
 
   function InitialName() {
-    const name = authState.userId
-    const separador = " "; //Omar Clavijo
-    const arraySubCadenas = name.split(separador)
-    let Iname: any = {}
-    for (var x = 0; x < arraySubCadenas.length; x++){
-      const subArray = arraySubCadenas[x].substring(0, 1);
-      Iname = subArray
+    const name = authState.username
+    var valores = []
+    const separador = " ";
+    if (name == null){
+      return name
+    } else {
+      const arraySubCadenas = name.split(separador)
+      let Iname: any = {}
+      for (var x = 0; x < arraySubCadenas.length; x++){
+        const subArray = valores.push(arraySubCadenas[x].substring(0, 1));
+        Iname = (subArray + " ")
+      }
+      var res = ""
+      for (var i = 0; i <valores.length; i++){
+        res += valores[i]
+      }
+      console.log(res)
+      return res;
     }
-    return Iname;
   };
 
   useEffect(() =>{
@@ -286,15 +296,25 @@ export const PoliceStackNavigatorAccFinished = ({ navigation, route }: any) => {
   }
 
   function InitialName() {
-    const name = authState.userId
-    const separador = " "; //Omar Clavijo
-    const arraySubCadenas = name.split(separador)
-    let Iname: any = {}
-    for (var x = 0; x < arraySubCadenas.length; x++){
-      const subArray = arraySubCadenas[x].substring(0, 1);
-      Iname = subArray
+    const name = authState.username
+    var valores = []
+    const separador = " ";
+    if (name == null){
+      return name
+    } else {
+      const arraySubCadenas = name.split(separador)
+      let Iname: any = {}
+      for (var x = 0; x < arraySubCadenas.length; x++){
+        const subArray = valores.push(arraySubCadenas[x].substring(0, 1));
+        Iname = (subArray + " ")
+      }
+      var res = ""
+      for (var i = 0; i <valores.length; i++){
+        res += valores[i]
+      }
+      console.log(res)
+      return res;
     }
-    return Iname;
   };
 
   useEffect(() =>{
