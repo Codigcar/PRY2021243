@@ -194,7 +194,6 @@ export const PoliceStackNavigatorAccNews = ({navigation, route, params}: any) =>
       for (var i = 0; i <valores.length; i++){
         res += valores[i]
       }
-      console.log(res)
       return res;
     }
   };
@@ -312,7 +311,6 @@ export const PoliceStackNavigatorAccFinished = ({ navigation, route }: any) => {
       for (var i = 0; i <valores.length; i++){
         res += valores[i]
       }
-      console.log(res)
       return res;
     }
   };
@@ -475,7 +473,6 @@ export const UserStackNavigatorAccNews = ({navigation, route}:any) => {
       for (var i = 0; i <valores.length; i++){
         res += valores[i]
       }
-      console.log(res)
       return res;
     }
   };
