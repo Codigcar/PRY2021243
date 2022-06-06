@@ -99,6 +99,9 @@ export const AuthNavigator = () => {
       <Stack.Screen
         name="Details"
         component={DetailsScreen}></Stack.Screen>
+                <Stack.Screen
+        name="AccidentsDetails"
+        component={AccidentsDetailUserScreen}></Stack.Screen>
     </StackAuth.Navigator>
   );
 };
