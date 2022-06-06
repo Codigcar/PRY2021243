@@ -59,6 +59,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
     try {
       const resp = await fetchWithToken(`api/accidents/${params.accidentId}`);
       const data = await resp.json();
+      console.log(params)
       console.log({data});
       setLoading(false);
       return data;
@@ -149,7 +150,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
                   rounded
                   size={55}
                   source={{
-                    uri: 'https://cdn2.salud180.com/sites/default/files/styles/medium/public/field/image/2020/11/mujer-22-anos-se-opera-para-no-tener-hijos.jpg',
+                    uri: 'https://larepublica.pe/resizer/gXrOo4NDeFnbosiPWezeTjL4wlk=/480x282/top/smart/arc-anglerfish-arc2-prod-gruporepublica.s3.amazonaws.com/public/VDMYQ2DXORG3PISSWOPVDQDBWE.jpg'
                   }}
                 />
               </View>
