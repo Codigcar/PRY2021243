@@ -30,6 +30,10 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
     setModalVisible(true);
   };
 
+  if (!hasLocation) {
+    return <LoadingScreen />;
+  }
+
   return (
     <>
       <MapView
@@ -46,7 +50,8 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
           markers.length > 0 &&
           markers.map(
             (marker: any, key: any) =>
-              marker.status && (
+              // (marker.status==0 || marker.status==1) && 
+              (
                 <Marker
                   image={require("../assets/images/flag.png")}
                   key={key}
@@ -54,8 +59,16 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
                     latitude: Number(marker.latitude),
                     longitude: Number(marker.longitude),
                   }}
-                  title="Esto es un título"
-                  description="Esto es una descripción del marcador"
+                  title={`Estado: ${
+                    marker.status == 0
+                      ? 'No atendido'
+                      : marker.status == 1
+                      ? 'En proceso'
+                      : marker.status == 2
+                      && 'Atendido'
+                      // : 'Finalizado'
+                  }`}
+                  description={`Placa: ${marker.plate}`}
                 />
               ),
           )}

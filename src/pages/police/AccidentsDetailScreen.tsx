@@ -59,6 +59,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
     try {
       const resp = await fetchWithToken(`api/accidents/${params.accidentId}`);
       const data = await resp.json();
+      console.log(params)
       console.log({data});
       setLoading(false);
       return data;
@@ -94,9 +95,11 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
   const onSubmit = async (data: any) => {
     setLoading(true);
     console.log('[onSubmit]: ', data);
+    console.log({authState});
     
     let body: any = {};
     if (data.conclusion || data.conclusion?.trim().length > 0 ) {
+      
       body = {
         status: 2,
         description: data.description,
@@ -111,7 +114,8 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
         userPolice: authState.userId,
       };
     }
-
+    console.log('[Body enviado al editar]: ', body);
+    
     try {
       const datares = await fetchWithToken(
         `api/accidents/${accidentDetail.id}`,
@@ -121,11 +125,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
       const resp = await datares.json();
       setValue('description', "");
       setValue('conclusion', "");
-      // reset();
-      console.log({resp});
       setLoading(false);
-      // navigation.goBack();
-      // navigation.navigate('AccidentsFinishedScreen');
       navigation.popToTop();
     } catch (error) {
       console.error({error});
@@ -150,7 +150,7 @@ const AccidentsDetailScreen = ({route: {params}, navigation}: Props) => {
                   rounded
                   size={55}
                   source={{
-                    uri: 'https://cdn2.salud180.com/sites/default/files/styles/medium/public/field/image/2020/11/mujer-22-anos-se-opera-para-no-tener-hijos.jpg',
+                    uri: 'https://larepublica.pe/resizer/gXrOo4NDeFnbosiPWezeTjL4wlk=/480x282/top/smart/arc-anglerfish-arc2-prod-gruporepublica.s3.amazonaws.com/public/VDMYQ2DXORG3PISSWOPVDQDBWE.jpg'
                   }}
                 />
               </View>

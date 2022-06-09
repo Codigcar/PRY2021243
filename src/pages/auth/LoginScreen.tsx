@@ -34,6 +34,8 @@ export const LoginScreen = ({ navigation }: any) => {
       const token = await fetchWithToken('api/users/login', data, 'POST');
       const resp = await token.json();
       const decoded:any = jwt_decode(resp.token);
+      console.log({decoded});
+      
       if(decoded.role === "USER"){
         signIn({
           username: decoded.name,

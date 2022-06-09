@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LoadingScreen} from '../pages/LoadingScreen';
 import {MapScreen} from '../pages/police/MapScreen';
@@ -27,6 +27,9 @@ import Button from '../components/Button';
 import { EditProfilePoliceScreen } from '../pages/police/EditPoliceProfile';
 import { EditGeneralProfileScreen } from '../pages/user/EditGeneralProfile';
 import { DetailsScreen } from '../pages/DetailsScreen';
+import { AuthContext } from '../context/AuthContext';
+import fetchWithToken from '../utils/fetchCustom';
+
 
 const StackAuth = createStackNavigator();
 const Stack = createStackNavigator();
@@ -35,7 +38,7 @@ const Tab = createMaterialBottomTabNavigator();
 const UserTab = createMaterialBottomTabNavigator();
 
 export const Navigator = () => {
-  const {permissions} = useContext(PermissionsContext);
+  const {permissions } = useContext(PermissionsContext);
 
   if (permissions.locationStatus === 'unavailable') {
     return <LoadingScreen />;
@@ -96,6 +99,9 @@ export const AuthNavigator = () => {
       <Stack.Screen
         name="Details"
         component={DetailsScreen}></Stack.Screen>
+                <Stack.Screen
+        name="AccidentsDetails"
+        component={AccidentsDetailUserScreen}></Stack.Screen>
     </StackAuth.Navigator>
   );
 };
@@ -153,14 +159,56 @@ export const PoliceBottomNavigator = () => {
   );
 };
 
-export const PoliceStackNavigatorAccNews = ({navigation, route}: any) => {
+export const PoliceStackNavigatorAccNews = ({navigation, route, params}: any) => {
+  const [name, setName] = useState<any>({});
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
   const closeSession = () => navigation.navigate('Start');
   const EditProfilePolice = () => navigation.navigate('EditProfilePolice');
   const showMenu = () => setVisible(true);
+  const {authState} = useContext(AuthContext);
 
+  const fetchInitData = async () => {
+    try{
+    const resp = await fetchWithToken(`api/users/${authState.userId}`);
+    const data = await resp.json();
+    console.log({data});
+    return data;
+    } catch (error) {
+      console.error({error})
+    }
+  }
+
+  function InitialName() {
+    const name = authState.username
+    var valores = []
+    const separador = " ";
+    if (name == null){
+      return name
+    } else {
+      const arraySubCadenas = name.split(separador)
+      let Iname: any = {}
+      for (var x = 0; x < arraySubCadenas.length; x++){
+        const subArray = valores.push(arraySubCadenas[x].substring(0, 1));
+        Iname = (subArray + " ")
+      }
+      var res = ""
+      for (var i = 0; i <valores.length; i++){
+        res += valores[i]
+      }
+      return res;
+    }
+  };
+
+  useEffect(() =>{
+    fetchInitData()
+      .then((resp: any) =>{
+          setName(resp);
+          setName(resp.name)
+      });
+  }, [])
+  
   return (
     <StackV2.Navigator
       initialRouteName="AccidentsScreen"
@@ -188,7 +236,7 @@ export const PoliceStackNavigatorAccNews = ({navigation, route}: any) => {
               visible={visible}
               anchor={<Avatar
                 rounded
-                title="MD"
+                title= {InitialName()}
                 overlayContainerStyle={{backgroundColor: Styles.colors.primary}}
                 containerStyle={{marginRight: 10}}
                 onPress={showMenu}
@@ -225,12 +273,59 @@ export const PoliceStackNavigatorAccNews = ({navigation, route}: any) => {
 
 export const PoliceStackNavigatorAccFinished = ({ navigation, route }: any) => {
   const [visible, setVisible] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const [name, setName] = useState<any>({});
+  const {authState} = useContext(AuthContext);
 
   const hideMenu = () => setVisible(false);
-  const closeSession = () => navigation.navigate('Start');
+  const closeSession = () => {
+  
+    logout();
+    navigation.navigate('Start');
+  }
   const EditProfilePolice = () => navigation.navigate('EditProfilePolice');
   const showMenu = () => setVisible(true);
 
+  const fetchInitData = async () => {
+    try{
+    const resp = await fetchWithToken(`api/users/${authState.userId}`);
+    const data = await resp.json();
+    console.log({data});
+    return data;
+    } catch (error) {
+      console.error({error})
+    }
+  }
+
+  function InitialName() {
+    const name = authState.username
+    var valores = []
+    const separador = " ";
+    if (name == null){
+      return name
+    } else {
+      const arraySubCadenas = name.split(separador)
+      let Iname: any = {}
+      for (var x = 0; x < arraySubCadenas.length; x++){
+        const subArray = valores.push(arraySubCadenas[x].substring(0, 1));
+        Iname = (subArray + " ")
+      }
+      var res = ""
+      for (var i = 0; i <valores.length; i++){
+        res += valores[i]
+      }
+      return res;
+    }
+  };
+
+  useEffect(() =>{
+    fetchInitData()
+      .then((resp: any) =>{
+          setName(resp);
+          setName(resp.name)
+      });
+  }, [])
+  
   return (
     <StackV2.Navigator
       initialRouteName="AccidentsFinishedScreen"
@@ -260,7 +355,7 @@ export const PoliceStackNavigatorAccFinished = ({ navigation, route }: any) => {
               visible={visible}
               anchor={<Avatar
                 rounded
-                title="MD"
+                title= {InitialName()}
                 overlayContainerStyle={{backgroundColor: Styles.colors.primary}}
                 containerStyle={{marginRight: 10}}
                 onPress={showMenu}
@@ -346,11 +441,53 @@ export const UserBottomNavigator = () => {
 
 export const UserStackNavigatorAccNews = ({navigation, route}:any) => {
   const [visible, setVisible] = useState(false);
+  const [name, setName] = useState<any>({});
   const hideMenu = () => setVisible(false);
   const closeSession = () => navigation.navigate('Start');
   const EditProfileGeneral = () => navigation.navigate('EditProfileGeneral');
   const showMenu = () => setVisible(true);
+  const {authState} = useContext(AuthContext);
 
+  const fetchInitData = async () => {
+    try{
+    const resp = await fetchWithToken(`api/users/${authState.userId}`);
+    const data = await resp.json();
+    console.log({data});
+    return data;
+    } catch (error) {
+      console.error({error})
+    }
+  }
+
+  function InitialName() {
+    const name = authState.username
+    var valores = []
+    const separador = " ";
+    if (name == null){
+      return name
+    } else {
+      const arraySubCadenas = name.split(separador)
+      let Iname: any = {}
+      for (var x = 0; x < arraySubCadenas.length; x++){
+        const subArray = valores.push(arraySubCadenas[x].substring(0, 1));
+        Iname = (subArray + " ")
+      }
+      var res = ""
+      for (var i = 0; i <valores.length; i++){
+        res += valores[i]
+      }
+      return res;
+    }
+  };
+
+  useEffect(() =>{
+    fetchInitData()
+      .then((resp: any) =>{
+          setName(resp);
+          setName(resp.name)
+      });
+  }, [])
+  
   return (
     <StackV2.Navigator
       initialRouteName="AccidentsUserScreen"
@@ -379,7 +516,7 @@ export const UserStackNavigatorAccNews = ({navigation, route}:any) => {
               visible={visible}
               anchor={<Avatar
                 rounded
-                title="MD"
+                title= {InitialName()}
                 overlayContainerStyle={{backgroundColor: Styles.colors.primary}}
                 containerStyle={{marginRight: 10}}
                 onPress={showMenu}
@@ -403,7 +540,7 @@ export const UserStackNavigatorAccNews = ({navigation, route}:any) => {
               visible={visible}
               anchor={<Avatar
                 rounded
-                title="MD"
+                title= {InitialName()}
                 overlayContainerStyle={{backgroundColor: Styles.colors.primary}}
                 containerStyle={{marginRight: 10}}
                 onPress={showMenu}

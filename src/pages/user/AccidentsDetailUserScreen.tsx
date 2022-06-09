@@ -1,9 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   TextInput,
   ScrollView,
   Alert,
@@ -14,7 +13,7 @@ import CModal from '../../components/CModal';
 import fetchWithToken from '../../utils/fetchCustom';
 import { LoadingScreen } from '../LoadingScreen';
 
-const AccidentsDetailUserScreen = ({route: {params}}: any) => {
+const AccidentsDetailUserScreen = ({navigation, route: {params}}: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [accidentDetail, setAccidentDetail] = useState<any>({});
   // const [userObject, setUserObject] = useState<any>({});
@@ -56,6 +55,7 @@ const AccidentsDetailUserScreen = ({route: {params}}: any) => {
     )
   }
 
+
   return (
     <ScrollView>
       <View style={[styles.card, modalVisible && styles.opacity]}>
@@ -65,7 +65,7 @@ const AccidentsDetailUserScreen = ({route: {params}}: any) => {
               rounded
               size={55}
               source={{
-                uri: 'https://cdn2.salud180.com/sites/default/files/styles/medium/public/field/image/2020/11/mujer-22-anos-se-opera-para-no-tener-hijos.jpg',
+                uri: 'https://larepublica.pe/resizer/gXrOo4NDeFnbosiPWezeTjL4wlk=/480x282/top/smart/arc-anglerfish-arc2-prod-gruporepublica.s3.amazonaws.com/public/VDMYQ2DXORG3PISSWOPVDQDBWE.jpg',
               }}
             />
           </View>
@@ -79,7 +79,7 @@ const AccidentsDetailUserScreen = ({route: {params}}: any) => {
           </View>
         </View>
         <View style={styles.body}>
-          <Text style={styles.titleInput}>Descripción</Text>
+          <Text style={styles.titleInput} onPress={() => navigation.navigate('Details', { accidentId: accidentDetail.id, })}>Descripción</Text>
           <TextInput
             multiline={true}
             numberOfLines={7}
@@ -144,6 +144,11 @@ const styles = StyleSheet.create({
   },
   opacity: {
     opacity: 0.4,
+  },
+  arrow: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
   },
 });
 

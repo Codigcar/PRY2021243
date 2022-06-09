@@ -18,6 +18,7 @@ export const authInitialState: IAuthState = {
 export interface AuthContextProps {
     authState: IAuthState;
     signIn: (payload: ILoginPayload) => void;
+    logout: () => void;
 }
 
 // creando el contexto
@@ -33,10 +34,15 @@ export const AuthProvider = ({children}: any ) => {
         dispatch({type: 'LOGIN', payload});
     }
 
+    const logout = () => {
+        dispatch({type: 'LOGOUT'})
+    };
+
     return (
         <AuthContext.Provider value={{
             authState: authReducer,
-            signIn: signIn
+            signIn: signIn,
+            logout: logout
         }}>
             {children}
         </AuthContext.Provider>

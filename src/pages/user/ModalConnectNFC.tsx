@@ -67,6 +67,8 @@ const ModalConnectNFC = ({
 
       let distric = '';
       let address = '';
+      let streetNumber = '';
+      let postalCode = '';
 
       if (tag) {
         cancelNfcScan();
@@ -81,6 +83,8 @@ const ModalConnectNFC = ({
         try {
           distric = await respGeo[1].locality;
           address = await respGeo[2].formattedAddress;
+          streetNumber = await respGeo[0].streetNumber;
+          postalCode = await respGeo[0].postalCode;
         } catch (error) {
           console.error(error);
         }
@@ -93,8 +97,8 @@ const ModalConnectNFC = ({
           owner: Nombre,
           phone: Celular,
           user: authState.userId,
-          address: distric + ', ' + address,
-          soat: 'SOAT',
+          address: distric + ', ' + address + ', '+ streetNumber + ', ' + postalCode,
+          soat: SOAT,
 
           // latitude: '-12.156843815273826',
           // longitude:  '-76.99931723000626',
@@ -109,8 +113,9 @@ const ModalConnectNFC = ({
 
         socketRef.current = io(DEV.ENV.APP_API_SOCKET);
         socketRef.current.emit('accidents', body);
-
       }
+
+      // }
     } catch (ex) {
       console.warn('Oops!', JSON.stringify(ex));
     } finally {
@@ -147,7 +152,7 @@ const ModalConnectNFC = ({
             style={{width: 120, height: 120, padding: 20}}
             resizeMode="contain"
           />
-          <Text style={styles.modalText}>Acercaaa tu teléfono al tag circular en la esquina inferior izquierda del parabrisas</Text>
+          <Text style={styles.modalText}>Acerca tu teléfono al tag circular en la esquina inferior izquierda del parabrisas</Text>
           <Button
             title="Cancelar"
             onPress={() => cancelNfcScan()}
