@@ -6,11 +6,24 @@ import {LoadingScreen} from '../pages/LoadingScreen';
 import {Button} from 'react-native-elements';
 import ModalConnectNFC from '../pages/user/ModalConnectNFC';
 import {Styles} from '../assets/css/Styles';
+import { StyleSheet } from 'react-native';
 
 interface Props {
   markers?: Marker[];
 }
-
+const styles = StyleSheet.create({
+  mapContainer: {
+    flex: 1,
+  },
+  userImageContainer: {
+    height: 50,
+    width: 50,
+  },
+  policeCarContainer: {
+    height: 50,
+    width: 100,
+  },
+});
 export const Map = ({markers}: Props) => {
   const {hasLocation, initialPosition, getCurrentLocation} = useLocation();
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -32,8 +45,8 @@ export const Map = ({markers}: Props) => {
         style={{flex: 1}}
         showsUserLocation
         initialRegion={{
-          latitude: initialPosition.latitude,
-          longitude: initialPosition.longitude,
+          latitude:  -12.18994612,
+          longitude: -76.99423495,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}>
@@ -46,11 +59,19 @@ export const Map = ({markers}: Props) => {
               (
                 <Marker
                   image={require('../assets/images/flag.png')}
+                  style={{height: '100%', width: '100%',paddingTop: 20}}
                   key={key}
                   coordinate={{
                     latitude: Number(marker.latitude),
                     longitude: Number(marker.longitude),
                   }}
+                  draggable={true}
+                  calloutAnchor={{
+                    x: 0.3,
+                    y: 0,
+                  }}
+                  anchor={{ x: 0, y: 0 }}
+                  centerOffset={{ x: 0, y: 0 }}
                   title={`Estado: ${
                     marker.status == 0
                       ? 'No atendido'

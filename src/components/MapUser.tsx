@@ -6,21 +6,24 @@ import MapView, {Marker, Polyline} from 'react-native-maps';
 import {Styles} from '../assets/css/Styles';
 import {useLocation} from '../hooks/useLocation';
 import {LoadingScreen} from '../pages/LoadingScreen';
-import {Image, Text, View, Animated, StyleSheet, Modal} from 'react-native';
+import {Image, Text, View, Animated, StyleSheet, Modal, Dimensions, useWindowDimensions} from 'react-native';
 import ModalConnectNFC from '../pages/user/ModalConnectNFC';
+import { MapScreen } from '../pages/police/MapScreen';
+import { Map } from './Map';
 
 interface Props {
   markers?: Marker[];
   user?: any;
 }
 
+
+
+const center = { lat: -12.18994612, lng: -76.99423495 }
+
 export const MapUser = ({markers, user = 'admin'}: Props) => {
   const {hasLocation, initialPosition, getCurrentLocation} = useLocation();
   const mapViewRef = useRef<MapView>();
   const [modalVisible, setModalVisible] = React.useState(false);
-
-  console.log('[latitude]: ', initialPosition.latitude);
-  console.log('[longitude]: ', initialPosition.longitude);
 
   if (!hasLocation) {
     return <LoadingScreen />;
@@ -38,13 +41,13 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
     <>
       <MapView
         ref={el => (mapViewRef.current = el!)}
-        style={[styles.mapViewContainer, modalVisible && styles.opacity]}
+        style={[styles.mapViewContainer, modalVisible && styles.opacity, styles.map]}
         showsUserLocation
         initialRegion={{
-          latitude: initialPosition.latitude,
-          longitude: initialPosition.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: center.lat,
+          longitude: center.lng,
+          latitudeDelta: 0.1844,
+          longitudeDelta: 0.0842,
         }}>
         {markers &&
           markers.length > 0 &&
@@ -54,6 +57,10 @@ export const MapUser = ({markers, user = 'admin'}: Props) => {
               (
                 <Marker
                   image={require("../assets/images/flag.png")}
+                  style={styles.markerImage}
+                  icon={{
+                    scale: Dimensions.get('window').scale
+                  }}
                   key={key}
                   coordinate={{
                     latitude: Number(marker.latitude),
@@ -101,6 +108,10 @@ const styles = StyleSheet.create({
   mapViewContainer: {
     flex: 1,
   },
+  map: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   wrapper: {
     width: '100%',
     height: '100%',
@@ -125,4 +136,7 @@ const styles = StyleSheet.create({
   opacity: {
     opacity: 0.3,
   },
+  markerImage: {
+    height: '100%', width: '100%'
+  }
 });
