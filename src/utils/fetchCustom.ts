@@ -4,8 +4,8 @@ const baseUrl = `${APP_API}`;
 export const ENV = {
   //APP_API: "http://20.25.92.149",
   //APP_API_SOCKET: "http://20.25.92.149",
-   APP_API: "http://10.0.2.2:3000",
-   APP_API_SOCKET: "http://10.0.2.2:3001"
+   APP_API: "http://192.168.1.20:3000",
+   APP_API_SOCKET: "http://192.168.1.20:3001"
 } 
 
 const fetchWithToken = (

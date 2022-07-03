@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  Alert } from 'react-native'
+import {  Alert, Image, ScrollView, TouchableOpacity,   ImageProps as DefaultImageProps,
+  ImageURISource, } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Button from '../components/Button'
@@ -11,22 +12,28 @@ import fetchWithToken from '../utils/fetchCustom'
 import { useForm } from 'react-hook-form'
 import { StackScreenProps } from '@react-navigation/stack'
 import { AuthContext } from '../context/AuthContext'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { LoadingScreen } from './LoadingScreen'
-import { EventType } from 'react-native-gesture-handler/lib/typescript/EventType'
+import { launchCamera } from 'react-native-image-picker';
+import CryptoJS from 'crypto-js'
+import ImagePicker from 'react-native-image-picker';
 
 interface Props extends StackScreenProps<any, any> {
   route: any;
 }
 
+//https://img.icons8.com/fluency/48/000000/photos.png
+
 export const DetailsScreen = ({route: {params}, navigation}: Props) => {
   const [deceased, setDeceased] = useState({ value: '', error: '' })
   const [wounded, setWounded] = useState({ value: '', error: '' })
   const [cars, setCars] = useState({ value: '', error: '' })
+  const [imageData, setImageData] = useState({value: '', error: ''});
   const [accidentDetail, setAccidentDetail] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingInitData, setLoadingInitData] = useState<boolean>(false);
   const {authState} = useContext(AuthContext);
+  const [image, setimage] = useState("https://img.icons8.com/fluency/48/000000/photos.png");
+  //const [url, seturl] = useState();
   const {
     setValue,
   } = useForm();
@@ -62,6 +69,79 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
     }
   };
 
+//Cloudinary
+const [picture ,setPicture] = useState<any>({})
+const [modal ,setModal] = useState(false)
+
+const handleUpdata = (photo: any) => {
+  const data = new FormData()
+  data.append('file',photo)
+  data.append("upload_preset","carwash")
+  data.append("cloud_name","dgkoatylm")
+  fetch("https://api.cloudinary.com/v1_1/dgkoatylm/image/upload",{
+      method:'POST',
+      body:data,
+      headers:{
+          'Accept':'application/json',
+          'Content-Type':'multipart/form-data'
+      }
+  }).then(res => res.json())
+  .then(data => {
+      setPicture(data.url)
+      setModal(false)
+      console.log(data)
+  }).catch(err => {
+      Alert.alert("Error While Uploading")
+  })
+  //imageData.value = data as unknown as string
+  console.log(imageData)
+
+}
+
+
+  const TakePhoto =  () => {
+
+    const options = {
+      title : 'Select Image',
+      storageOptions: {
+          skipBackup: true,
+          path:'Image_Italy_'
+      },
+      mediaType: 'photo' as const,
+      url: 'url' as const,
+      includeBase64: true
+    }
+
+    launchCamera(options, (response) => {
+      console.log('Response=',response);
+      if (response.didCancel){
+        console.log("User cancelled image picker");
+      } else if (response.errorMessage){
+        console.log("Image Picker Error",response.errorMessage);
+      }
+      else if (response.assets){
+        const uri = response.assets[0].uri
+        const type = "image/jpg"
+        const name = response.assets[0].fileName
+        const source = {uri,type,name}
+        console.log(source)
+        handleUpdata(source)
+
+      }
+      /*else if (response.assets){
+        let uri = response.assets[0].uri
+        if (uri == null) {
+          uri = 'https://fcmabogados.com.ar/wp-content/uploads/2020/06/iconos-servicios-abogados-fcm-12.png'
+        }
+        imageData.value = uri
+        console.log(uri)
+        console.log(imageData)
+        setimage(uri)
+      }*/
+    })
+    
+  }
+
   const sendPressed = async (data: any) => {
     data.persist()
     setLoading(true);
@@ -70,18 +150,21 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
     const deceasedError = fieldValidator(deceased.value)
     const woundedError = fieldValidator(wounded.value)
     const carsError = fieldValidator(cars.value)
+    const imageError = fieldValidator(imageData.value)
     let body: any = {};
     if (deceasedError || woundedError || carsError) {
       setDeceased({ ...deceased, error: deceasedError })
       setWounded({ ...wounded, error: woundedError })
       setCars({ ...cars, error: carsError })
+      setImageData({...imageData, error: imageError})
       return
     }
 
     body = {
       description: "Número de fallecidos: " + deceased.value + '\n' +
       "Número de heridos: " + wounded.value + '\n' +
-      "Número de carros: " + cars.value
+      "Número de carros: " + cars.value + '\n' +
+      "Image: " + imageData.value
     };
 
       console.log('[Body enviado al editar]: ', body);
@@ -108,7 +191,7 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
     }
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <ScrollView style={{ backgroundColor: 'white'}}>
             {loading ? (
         <LoadingScreen />
       ) : (    <Background>
@@ -144,6 +227,12 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
             error={!!cars.error}
             errorText={cars.error}
           />
+          <Button
+            onPress={TakePhoto}
+            mode="contained"
+            style={{marginTop:-10, backgroundColor:'#C8013C'}}>
+          </Button>
+
           <Divider style={{height:20}}></Divider>
           <Button
             mode="contained"
@@ -155,6 +244,6 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
         </Card>
         <Divider style={{height:20}}></Divider>
       </Background>)}
-    </SafeAreaView>
+    </ScrollView>
   );
 };
