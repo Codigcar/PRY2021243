@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import {  Alert, Image, ScrollView, TouchableOpacity,   ImageProps as DefaultImageProps,
-  ImageURISource, } from 'react-native'
+import {  Alert, Image, ScrollView, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Button from '../components/Button'
@@ -14,8 +13,6 @@ import { StackScreenProps } from '@react-navigation/stack'
 import { AuthContext } from '../context/AuthContext'
 import { LoadingScreen } from './LoadingScreen'
 import { launchCamera } from 'react-native-image-picker';
-import CryptoJS from 'crypto-js'
-import ImagePicker from 'react-native-image-picker';
 
 interface Props extends StackScreenProps<any, any> {
   route: any;
@@ -27,7 +24,7 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
   const [deceased, setDeceased] = useState({ value: '', error: '' })
   const [wounded, setWounded] = useState({ value: '', error: '' })
   const [cars, setCars] = useState({ value: '', error: '' })
-  const [imageData, setImageData] = useState({value: '', error: ''});
+  let [imageData, setImageData] = useState({value: '', error: ''});
   const [accidentDetail, setAccidentDetail] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingInitData, setLoadingInitData] = useState<boolean>(false);
@@ -70,11 +67,12 @@ export const DetailsScreen = ({route: {params}, navigation}: Props) => {
   };
 
 //Cloudinary
-const [picture ,setPicture] = useState<any>({})
+const [picture ,setPicture] = useState('')
 const [modal ,setModal] = useState(false)
 
 const handleUpdata = (photo: any) => {
   const data = new FormData()
+  //imageData = {value: data as string, error: ''}
   data.append('file',photo)
   data.append("upload_preset","carwash")
   data.append("cloud_name","dgkoatylm")
@@ -88,13 +86,12 @@ const handleUpdata = (photo: any) => {
   }).then(res => res.json())
   .then(data => {
       setPicture(data.url)
+      console.log('Verdaero link de cloudi: ',data.url)
+      imageData.value = data.url
       setModal(false)
-      console.log(data)
-  }).catch(err => {
+  }).catch(_err => {
       Alert.alert("Error While Uploading")
   })
-  //imageData.value = data as unknown as string
-  console.log(imageData)
 
 }
 
@@ -124,20 +121,9 @@ const handleUpdata = (photo: any) => {
         const type = "image/jpg"
         const name = response.assets[0].fileName
         const source = {uri,type,name}
-        console.log(source)
         handleUpdata(source)
 
       }
-      /*else if (response.assets){
-        let uri = response.assets[0].uri
-        if (uri == null) {
-          uri = 'https://fcmabogados.com.ar/wp-content/uploads/2020/06/iconos-servicios-abogados-fcm-12.png'
-        }
-        imageData.value = uri
-        console.log(uri)
-        console.log(imageData)
-        setimage(uri)
-      }*/
     })
     
   }
@@ -164,7 +150,7 @@ const handleUpdata = (photo: any) => {
       description: "Número de fallecidos: " + deceased.value + '\n' +
       "Número de heridos: " + wounded.value + '\n' +
       "Número de carros: " + cars.value + '\n' +
-      "Image: " + imageData.value
+      "Image: " + picture
     };
 
       console.log('[Body enviado al editar]: ', body);
@@ -227,17 +213,24 @@ const handleUpdata = (photo: any) => {
             error={!!cars.error}
             errorText={cars.error}
           />
-          <Button
-            onPress={TakePhoto}
-            mode="contained"
-            style={{marginTop:-10, backgroundColor:'#C8013C'}}>
-          </Button>
+          <TouchableOpacity
+          onPress={TakePhoto}>
+          <Image
+          style= {{
+            alignSelf: 'center',
+            width: 200,
+            height: 200
+          }}
+          source= {{uri: picture}}>
+
+          </Image>
+          </TouchableOpacity>
 
           <Divider style={{height:20}}></Divider>
           <Button
             mode="contained"
             onPress={sendPressed}
-            style={{marginTop:-10, backgroundColor:'#C8013C'}}
+            style={{marginTop:-5, backgroundColor:'#C8013C'}}
           >
             ENVIAR
           </Button>
